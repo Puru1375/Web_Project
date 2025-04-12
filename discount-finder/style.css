@@ -1,0 +1,55 @@
+/* style.css */
+
+/* Basic Reset/Setup */
+body { font-family: sans-serif; margin: 0; line-height: 1.6; background-color: #f4f4f4; }
+h1, h2, h3 { margin-bottom: 0.5em; color: #333; }
+a { color: #007bff; text-decoration: none; }
+a:hover { text-decoration: underline; }
+img { max-width: 100%; height: auto; display: block; }
+* { box-sizing: border-box; }
+
+/* Layout */
+header, main, footer { padding: 1em 5%; max-width: 1200px; margin: 0 auto; }
+header { background-color: #ffffff; border-bottom: 1px solid #dee2e6; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; }
+header h1 { margin: 0; }
+header h1 a { color: #0056b3; text-decoration: none; }
+nav ul { list-style: none; padding: 0; margin: 0; display: flex; gap: 1em; }
+nav a { padding: 0.5em; }
+main { padding-top: 2em; padding-bottom: 2em; }
+section { background-color: #ffffff; padding: 1.5em; margin-bottom: 2em; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+footer { background-color: #343a40; color: white; text-align: center; margin-top: 2em; padding-top: 1.5em; padding-bottom: 1.5em; }
+section h2 { border-bottom: 2px solid #007bff; padding-bottom: 0.3em; display: inline-block; }
+
+/* Product Grid */
+.product-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5em; margin-top: 1em; }
+.product-card { border: 1px solid #ddd; padding: 1em; border-radius: 8px; text-align: center; background-color: #fff; box-shadow: 0 1px 3px rgba(0,0,0,0.1); display: flex; flex-direction: column; justify-content: space-between; transition: transform 0.2s ease, box-shadow 0.2s ease; }
+.product-card:hover { transform: translateY(-5px); box-shadow: 0 4px 8px rgba(0,0,0,0.15); }
+.product-card img { max-height: 150px; width: auto; margin: 0 auto 1em auto; }
+.product-card h3 { font-size: 1.1em; margin-bottom: 0.3em; flex-grow: 1; }
+.price { font-weight: bold; color: #28a745; font-size: 1.2em; margin: 0.5em 0; }
+.original-price { text-decoration: line-through; color: #6c757d; font-size: 0.9em; margin-right: 0.5em; }
+.discount { color: #dc3545; font-size: 0.9em; margin-bottom: 1em; }
+.buy-button { display: inline-block; background-color: #007bff; color: white; padding: 0.6em 1.2em; border-radius: 5px; text-decoration: none; margin-top: auto; align-self: center; }
+.buy-button:hover { background-color: #0056b3; text-decoration: none; }
+
+/* Authentication & Comparison Forms */
+.auth-form, #compare-form { max-width: 400px; margin: 1em auto; padding: 1.5em; background-color: #f8f9fa; border: 1px solid #ccc; border-radius: 8px; }
+#compare-form { max-width: none; background: none; border: none; padding: 0; } /* Reset for comparison */
+.auth-form h2 { text-align: center; margin-bottom: 1.5em; }
+.form-group { margin-bottom: 1em; }
+.form-group label { display: block; margin-bottom: 0.5em; font-weight: bold; }
+.form-group input[type="text"],
+.form-group input[type="email"],
+.form-group input[type="password"],
+.form-group input[type="url"] { width: 100%; padding: 0.7em; border: 1px solid #ccc; border-radius: 4px; }
+.auth-form button, #compare-form button { width: 100%; padding: 0.8em; background-color: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 1.1em; margin-top: 1em; }
+.auth-form button:hover, #compare-form button:hover { background-color: #0056b3; }
+.auth-form p { text-align: center; margin-top: 1.5em; }
+.message-area { margin-top: 1em; text-align: center; font-weight: bold; min-height: 1.2em; font-size: 0.95em;}
+#compare-form .form-group { display: flex; align-items: center; gap: 10px; }
+#compare-form label { margin-bottom: 0; }
+#compare-form input[type="url"] { flex-grow: 1; /* Take remaining space */ }
+#compare-form button { width: auto; /* Adjust button width */ margin-top: 0; font-size: 1em; padding: 0.7em 1em; }
+#comparison-results { margin-top: 1em; padding: 1em; background-color: #e9ecef; border-radius: 5px; }
+#comparison-results p, #comparison-results ul { margin: 0.5em 0; }
+#comparison-results ul { padding-left: 20px; }

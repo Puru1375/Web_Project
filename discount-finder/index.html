@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Discount Finder Pro</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1><a href="index.html">Discount Finder Pro</a></h1>
+        <nav>
+            <ul id="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="login.html">Login</a></li>
+                <li><a href="register.html">Register</a></li>
+                </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section id="discount-products">
+            <h2>Today's Top Discounts</h2>
+            <div class="product-grid">
+                <p>Loading products...</p>
+            </div>
+        </section>
+
+        <section id="price-comparison">
+            <h2>Find the Lowest Price (Simulation)</h2>
+            <form id="compare-form">
+                <div class="form-group">
+                    <label for="product-link">Paste Product Link:</label>
+                    <input type="url" id="product-link" name="product-link" required placeholder="https://example-store.com/product-name">
+                    <button type="submit">Compare Prices</button>
+                </div>
+            </form>
+            <div id="comparison-results">
+                <p>Enter a product link above to start comparison.</p>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 Discount Finder Pro</p>
+    </footer>
+
+    <script src="script.js" defer></script>
+    </body>
+</html>
