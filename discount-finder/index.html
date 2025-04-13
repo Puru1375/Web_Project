@@ -12,9 +12,15 @@
         <nav>
             <ul id="nav-links">
                 <li><a href="index.html">Home</a></li>
-                <li><a href="login.html">Login</a></li>
-                <li><a href="register.html">Register</a></li>
-                </ul>
+                <li id="nav-login"><a href="login.html">Login</a></li>
+                <li id="nav-register"><a href="register.html">Register</a></li>
+                <li id="nav-user-info" style="display: none;">
+                    Welcome, <span id="nav-username">User</span>!
+                </li>
+                <li id="nav-logout" style="display: none;">
+                    <button id="logout-button" type="button">Logout</button>
+                </li>
+            </ul>
         </nav>
     </header>
 
