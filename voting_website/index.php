@@ -21,6 +21,9 @@ $csrf_token = generateCSRFToken(); // Generate/get token
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
+<div class="spinner-overlay">
+        <div class="spinner"></div>
+    </div>
     <div class="container auth-form">
         <h2>Login</h2>
         <form id="loginForm">
@@ -38,6 +41,9 @@ $csrf_token = generateCSRFToken(); // Generate/get token
             <p>Don't have an account? <a href="register.php">Register here</a></p>
         </form>
     </div>
+    <footer>
+        Voting Website © <?php echo date("Y"); ?>
+    </footer>
 
     <script src="js/script.js"></script>
 </body>

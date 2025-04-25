@@ -1,7 +1,7 @@
 <?php
 // api/login_handler.php
 require 'db_connect.php'; // Includes session_start()
-
+require 'helpers.php'; // Include the file with CSRF functions
 if ($_SERVER['REQUEST_METHOD'] === 'POST') { // Only verify for POST requests usually
     $submittedToken = $_POST['csrf_token'] ?? '';
     if (!verifyCSRFToken($submittedToken)) {
@@ -15,8 +15,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') { // Only verify for POST requests us
 // --- End CSRF Verification ---
 
 
-// If verification passed, continue with the rest of the script...
-checkLogin(); // Ensure user is logged in (if required for this action)
+// If verification passed, continue with the rest of the script... // Ensure user is logged in (if required for this action)
 
 
 header('Content-Type: application/json');

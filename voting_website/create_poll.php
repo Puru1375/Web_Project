@@ -19,6 +19,9 @@ $csrf_token = generateCSRFToken(); // Generate/get token
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
+<div class="spinner-overlay">
+        <div class="spinner"></div>
+    </div>
      <header>
         <h1>Create New Poll</h1>
         <nav>
@@ -45,11 +48,20 @@ $csrf_token = generateCSRFToken(); // Generate/get token
                 </div>
             </div>
 
+            <div class="form-group">
+                <label for="closes_at">Closes At (Optional):</label>
+                <input type="datetime-local" id="closes_at" name="closes_at">
+                <small>Leave blank if the poll should never close automatically.</small>
+            </div>
+
             <button type="button" id="addOptionBtn">Add Another Option</button>
             <button type="submit">Create Poll</button>
             <p id="message" class="message"></p>
         </form>
     </div>
+    <footer>
+        Voting Website © <?php echo date("Y"); ?>
+    </footer>
 
     <script src="js/script.js"></script>
 </body>

@@ -12,6 +12,9 @@ $csrf_token = generateCSRFToken(); // Generate/get token
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
+<div class="spinner-overlay">
+        <div class="spinner"></div>
+    </div>
     <div class="container auth-form">
         <h2>Verify Your Account</h2>
         <p>An OTP has been sent to <strong><?php echo htmlspecialchars($_GET['email'] ?? 'your email'); ?></strong>. Please enter it below.</p>
@@ -27,6 +30,9 @@ $csrf_token = generateCSRFToken(); // Generate/get token
              <p><a href="register.php">Go back to Registration</a></p>
         </form>
     </div>
+    <footer>
+        Voting Website © <?php echo date("Y"); ?>
+    </footer>
 
     <script src="js/script.js"></script>
 </body>

@@ -7,17 +7,55 @@ document.addEventListener('DOMContentLoaded', () => {
     const pollsListDiv = document.getElementById('pollsList');
     const messageDiv = document.getElementById('message'); // General message div
     const voteMessageDiv = document.getElementById('voteMessage'); // Message div on dashboard specifically for votes
+    const spinnerOverlay = document.querySelector('.spinner-overlay'); 
+
+
+    function showLoading(button = null, showGlobal = false) {
+        if (button) {
+            button.disabled = true;
+            button.classList.add('loading');
+            // Optionally add spinner element inside button if not using CSS only
+            // const spinner = button.querySelector('.button-spinner') || document.createElement('span');
+            // spinner.className = 'button-spinner';
+            // button.appendChild(spinner); // Or make visible if already there
+        }
+        if (showGlobal && spinnerOverlay) {
+            document.body.classList.add('loading'); // Shows the overlay via CSS
+        }
+    }
+
+    function hideLoading(button = null, showGlobal = false) {
+         if (button) {
+            button.disabled = false;
+            button.classList.remove('loading');
+            // Remove spinner if added dynamically
+            // const spinner = button.querySelector('.button-spinner');
+            // if (spinner) spinner.remove(); // Or hide
+        }
+         if (showGlobal && spinnerOverlay) {
+            document.body.classList.remove('loading'); // Hides the overlay via CSS
+        }
+    }
+
+
 
     // --- Helper Function for API Calls ---
-    async function apiCall(url, formData) {
+    async function apiCall(url, formData,button = null) {
+        showLoading(button);
         try {
             const response = await fetch(url, {
                 method: 'POST',
                 body: formData
             });
             if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
+                // Try to get text for better error reporting
+                let errorText = response.statusText;
+                try {
+                   errorText = await response.text();
+                   console.error("Server Response Text (Error):", errorText);
+                } catch(e){}
+               throw new Error(`HTTP error! status: ${response.status} - ${errorText}`);
+           }
             return await response.json();
         } catch (error) {
             console.error('API Call Error:', error);
@@ -31,6 +69,8 @@ document.addEventListener('DOMContentLoaded', () => {
              } catch (e) { /* ignore */ }
         }
             return { success: false, message: `Network or server error: ${errorMessage}` };
+        }finally {
+            hideLoading(button); // Hide button loading state regardless of success/failure
         }
     }
 
@@ -48,50 +88,28 @@ document.addEventListener('DOMContentLoaded', () => {
     if (registerForm) {
         registerForm.addEventListener('submit', async (e) => {
             e.preventDefault();
+            const submitButton = registerForm.querySelector('button[type="submit"]');
             const formData = new FormData(registerForm);
-            const response = await apiCall('api/register_handler.php', formData);
-
+            // Pass button to apiCall
+            const response = await apiCall('api/register_handler.php', formData, submitButton);
             showMessage(messageDiv, response.message, response.success);
-
             if (response.success && response.otp_sent) {
-                // Redirect to OTP verification page, passing email
-                // Also pass the demo OTP in the URL for testing (REMOVE IN PRODUCTION)
-                let redirectUrl = `verify_otp.php?email=${encodeURIComponent(response.user_email)}`;
-                if (response.demo_otp) {
-                     redirectUrl += `&demo_otp=${response.demo_otp}`; // FOR DEMO ONLY
-                     alert(`DEMO ONLY: OTP is ${response.demo_otp}`);
-                }
-                window.location.href = redirectUrl;
+                 window.location.href = `verify_otp.php?email=${encodeURIComponent(response.user_email)}`;
             }
         });
     }
 
     // --- OTP Verification Form ---
     if (otpForm) {
-        // Pre-fill OTP if passed in URL (DEMO ONLY)
-        // const urlParams = new URLSearchParams(window.location.search);
-        // const demoOtp = urlParams.get('demo_otp');
-        // const otpInput = document.getElementById('otp');
-        //  if (demoOtp && otpInput) {
-        //      otpInput.value = demoOtp;
-        //  }
-         // Auto-fill email from URL param into hidden field if needed (already done with PHP echo)
-         // const emailParam = urlParams.get('email');
-         // const emailInput = document.getElementById('email');
-         // if(emailParam && emailInput) emailInput.value = emailParam;
-
         otpForm.addEventListener('submit', async (e) => {
             e.preventDefault();
+             const submitButton = otpForm.querySelector('button[type="submit"]');
             const formData = new FormData(otpForm);
-            const response = await apiCall('api/otp_handler.php', formData);
-
+            const response = await apiCall('api/otp_handler.php', formData, submitButton);
             showMessage(messageDiv, response.message, response.success);
-
             if (response.success) {
-                // Redirect to login page after a short delay
-                setTimeout(() => {
-                    window.location.href = 'index.php';
-                }, 2000); // Wait 2 seconds
+                 showMessage(messageDiv, response.message + " Redirecting...", true); // Add redirect message
+                setTimeout(() => { window.location.href = 'index.php'; }, 2000);
             }
         });
     }
@@ -100,19 +118,13 @@ document.addEventListener('DOMContentLoaded', () => {
     if (loginForm) {
         loginForm.addEventListener('submit', async (e) => {
             e.preventDefault();
+            const submitButton = loginForm.querySelector('button[type="submit"]');
             const formData = new FormData(loginForm);
-            const response = await apiCall('api/login_handler.php', formData);
-
+            const response = await apiCall('api/login_handler.php', formData, submitButton);
             showMessage(messageDiv, response.message, response.success);
-
             if (response.success) {
-                // Redirect to dashboard
                 window.location.href = 'dashboard.php';
             }
-            // Optional: Handle OTP redirect if needed
-            // if (response.redirect_otp && response.user_email) {
-            //     window.location.href = `verify_otp.php?email=${encodeURIComponent(response.user_email)}`;
-            // }
         });
     }
 
@@ -153,25 +165,22 @@ document.addEventListener('DOMContentLoaded', () => {
              }
 
 
-            const formData = new FormData(createPollForm);
-            const response = await apiCall('api/create_poll_handler.php', formData);
-
-            showMessage(messageDiv, response.message, response.success);
-
-            if (response.success) {
-                // Optionally clear the form or redirect
-                // createPollForm.reset();
-                // optionsContainer.innerHTML = ''; // Clear dynamically added options too if needed
-                 setTimeout(() => {
-                    window.location.href = 'dashboard.php'; // Redirect back to dashboard
-                }, 1500);
-            }
+             const submitButton = createPollForm.querySelector('button[type="submit"]');
+             const formData = new FormData(createPollForm);
+             const response = await apiCall('api/create_poll_handler.php', formData, submitButton);
+             showMessage(messageDiv, response.message, response.success);
+             if (response.success) {
+                  showMessage(messageDiv, response.message + " Redirecting...", true);
+                  setTimeout(() => { window.location.href = 'dashboard.php'; }, 1500);
+             }
         });
     }
 
     // --- Load Polls on Dashboard ---
     async function loadPolls() {
         if (!pollsListDiv) return; // Only run on dashboard page
+        showLoading(null, true); // Show global overlay for initial load
+        pollsListDiv.innerHTML = '<p><i>Loading polls...</i></p>'; // Improved loading text
     
         try {
             // Fetch the polls list (includes 'has_voted' status)
@@ -188,6 +197,16 @@ document.addEventListener('DOMContentLoaded', () => {
                     const pollElement = document.createElement('div');
                     pollElement.className = 'poll-item';
                     pollElement.dataset.pollId = poll.id; // Store poll ID
+
+                    // Display closing time if set
+                    let closesAtText = '';
+                    if (poll.closes_at_formatted) {
+                         closesAtText = `<p class="poll-meta closes-info">Closes: ${poll.closes_at_formatted}</p>`;
+                    } else {
+                         closesAtText = `<p class="poll-meta closes-info">Never closes</p>`;
+                    }
+                    // Add a specific status message for closed polls
+                    let pollStatusText = !poll.is_open ? '<p class="poll-status-closed"><strong>Status: Closed</strong></p>' : '';        
     
                     pollElement.innerHTML = `
                         <h3>${escapeHtml(poll.question)}</h3>
@@ -224,7 +243,9 @@ document.addEventListener('DOMContentLoaded', () => {
         } catch (error) {
             console.error('Error fetching polls:', error);
             pollsListDiv.innerHTML = `<p class="error">Failed to load polls. ${error.message}</p>`;
-        }
+        }finally {
+            hideLoading(null, true); // Hide global overlay
+       }
     }
 
     function displayVotingOptions(pollElement, poll) {
@@ -266,7 +287,8 @@ document.addEventListener('DOMContentLoaded', () => {
           resultsButton.textContent = 'Loading Results...';
           resultsButton.disabled = true;
         }
-    
+        
+        showLoading(resultsButton);
         container.innerHTML = '<p><i>Loading results...</i></p>';
     
         try {
@@ -317,6 +339,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 resultsButton.textContent = 'View Results';
                 resultsButton.disabled = false;
              }
+        } finally {
+            hideLoading(resultsButton); // Hide button loading state
         }
     }
 
@@ -362,7 +386,7 @@ document.addEventListener('DOMContentLoaded', () => {
                       voteButton.textContent = 'Submitting...';
                       if (resultsButton) resultsButton.disabled = true; // Disable results button too
    
-                      const response = await apiCall('api/submit_vote.php', formData);
+                      const response = await apiCall('api/submit_vote.php', formData, voteButton);
    
                       showMessage(voteMessageDiv, response.message, response.success);
                       setTimeout(() => showMessage(voteMessageDiv, '', false), 4000);

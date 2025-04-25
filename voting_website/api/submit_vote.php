@@ -31,6 +31,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $response['message'] = 'Poll ID and Option ID are required.';
     } else {
         try {
+
+             // --- Check if Poll is Open before proceeding ---
+            $sqlCheckOpen = "SELECT (closes_at IS NULL OR closes_at > NOW()) AS is_open FROM polls WHERE id = ?";
+            $stmtCheckOpen = $pdo->prepare($sqlCheckOpen);
+            $stmtCheckOpen->execute([$pollId]);
+            $pollStatus = $stmtCheckOpen->fetch();
+    
+            if (!$pollStatus) {
+                 $response['message'] = 'Poll not found.';
+            } elseif (!$pollStatus['is_open']) {
+                 $response['message'] = 'Sorry, this poll is now closed for voting.';
+            } else {
+             // --- Poll is open, proceed with voting logic ---
+
+
              // 1. Verify the option belongs to the poll (optional but good practice)
              $sqlCheckOption = "SELECT COUNT(*) FROM poll_options WHERE id = ? AND poll_id = ?";
              $stmtCheckOption = $pdo->prepare($sqlCheckOption);
@@ -60,6 +75,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 } else {
                     $response['message'] = 'Failed to submit vote. Please try again.';
                 }
+            }
             }
         } catch (PDOException $e) {
              // Check for unique constraint violation (alternative way to check if already voted)

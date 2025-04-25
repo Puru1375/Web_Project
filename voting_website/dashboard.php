@@ -17,6 +17,9 @@ $csrf_token = generateCSRFToken(); // Generate/get token
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
+<div class="spinner-overlay">
+        <div class="spinner"></div>
+    </div>
     <header>
         <h1>Voting Dashboard</h1>
         <nav>
@@ -34,6 +37,9 @@ $csrf_token = generateCSRFToken(); // Generate/get token
         </div>
          <div id="voteMessage" class="message" style="margin-top: 20px;"></div>
     </div>
+    <footer>
+        Voting Website © <?php echo date("Y"); ?>
+    </footer>
 
     <script src="js/script.js"></script>
 </body>
