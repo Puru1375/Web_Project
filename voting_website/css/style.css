@@ -1,0 +1,318 @@
+/* css/style.css */
+body {
+    font-family: sans-serif;
+    line-height: 1.6;
+    margin: 0;
+    background-color: #f4f4f4;
+    color: #333;
+}
+
+.container {
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+header {
+    background-color: #333;
+    color: #fff;
+    padding: 1rem 0;
+    text-align: center;
+}
+
+header h1 {
+    margin: 0;
+    padding-bottom: 5px;
+}
+
+header nav {
+     margin-top: 10px;
+}
+
+header nav span {
+    margin-right: 20px;
+}
+
+
+header nav a {
+    color: #fff;
+    text-decoration: none;
+    margin: 0 10px;
+    padding: 5px 10px;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+}
+
+header nav a:hover {
+    background-color: #555;
+}
+
+/* Forms */
+.auth-form {
+    max-width: 400px;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.form-group input[type="text"],
+.form-group input[type="email"],
+.form-group input[type="password"],
+.form-group textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box; /* Include padding in width */
+}
+ .form-group textarea {
+    resize: vertical;
+ }
+
+button, .button-link {
+    display: inline-block;
+    background-color: #5cb85c;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1em;
+    text-decoration: none;
+    margin-top: 10px;
+}
+
+button:hover, .button-link:hover {
+    background-color: #4cae4c;
+}
+
+button[type="button"] {
+    background-color: #f0ad4e;
+     margin-left: 10px;
+}
+button[type="button"]:hover {
+     background-color: #ec971f;
+}
+ button.remove-option-btn {
+     background-color: #d9534f;
+     padding: 2px 6px;
+     font-size: 0.8em;
+     margin-left: 10px;
+     vertical-align: middle;
+ }
+  button.remove-option-btn:hover {
+     background-color: #c9302c;
+ }
+
+
+/* Messages */
+.message {
+    padding: 10px;
+    margin-top: 15px;
+    border-radius: 4px;
+    text-align: center;
+    font-weight: bold;
+}
+
+.message.success {
+    background-color: #dff0d8;
+    color: #3c763d;
+    border: 1px solid #d6e9c6;
+}
+
+.message.error {
+    background-color: #f2dede;
+    color: #a94442;
+    border: 1px solid #ebccd1;
+}
+
+/* Polls List */
+#pollsList {
+    margin-top: 20px;
+}
+
+.poll-item {
+    background-color: #f9f9f9;
+    border: 1px solid #eee;
+    padding: 15px;
+    margin-bottom: 15px;
+    border-radius: 5px;
+}
+
+.poll-item h3 {
+    margin-top: 0;
+    margin-bottom: 5px;
+    color: #337ab7;
+}
+
+.poll-meta {
+    font-size: 0.9em;
+    color: #777;
+    margin-bottom: 10px;
+}
+
+.poll-option {
+    margin-bottom: 8px;
+}
+.poll-option label {
+    margin-left: 5px;
+    cursor: pointer;
+}
+.poll-option input[type="radio"]{
+    cursor: pointer;
+    vertical-align: middle;
+}
+
+.vote-button {
+     margin-top: 15px;
+     background-color: #337ab7;
+}
+.vote-button:hover {
+     background-color: #286090;
+}
+ button:disabled {
+     background-color: #ccc;
+     cursor: not-allowed;
+ }
+
+
+/* Create Poll Options */
+.option-group {
+    position: relative; /* For positioning remove button if needed */
+    padding-right: 70px; /* Make space for remove button */
+}
+ .option-group input[type="text"] {
+    width: calc(100% - 75px); /* Adjust input width */
+    display: inline-block;
+ }
+.option-group .remove-option-btn {
+    position: absolute;
+    right: 0;
+    top: 25px; /* Adjust vertical alignment */
+}
+
+/* Small screen adjustments */
+@media (max-width: 600px) {
+    .container {
+        margin: 10px;
+        padding: 15px;
+    }
+    header nav a {
+        display: block;
+        margin: 5px 0;
+        text-align: center;
+    }
+     header nav span {
+        display: block;
+        text-align: center;
+        margin-bottom: 10px;
+    }
+    .option-group input[type="text"] {
+        width: 100%;
+        display: block;
+        margin-bottom: 5px;
+     }
+    .option-group .remove-option-btn {
+        position: static; /* Stack button below input */
+         display: block;
+         width: 100px; /* Or adjust as needed */
+         margin: 5px 0 0 0; /* Reset margin */
+     }
+     .option-group {
+         padding-right: 0;
+     }
+
+}
+
+.poll-options-container {
+    margin-top: 15px;
+    margin-bottom: 15px;
+}
+
+.poll-results-list {
+    list-style: none;
+    padding: 0;
+    margin-top: 10px;
+}
+
+.poll-results-list li {
+    margin-bottom: 12px;
+    border-left: 3px solid #eee; /* Subtle left border */
+    padding-left: 10px;
+}
+
+.poll-results-list .result-text {
+    display: inline-block; /* Or block if you want it on its own line */
+    font-weight: bold;
+    margin-right: 5px;
+     color: #333;
+}
+
+.poll-results-list .result-count {
+    color: #555;
+    font-size: 0.9em;
+    margin-right: 5px;
+}
+
+.poll-results-list .result-percentage {
+    color: #777;
+    font-size: 0.9em;
+    font-style: italic;
+}
+
+.result-bar-container {
+    background-color: #e9e9e9;
+    border-radius: 4px;
+    height: 10px; /* Adjust height */
+    margin-top: 4px;
+    overflow: hidden; /* Ensure inner bar stays contained */
+}
+
+.result-bar {
+    background-color: #5cb85c; /* Green, same as submit button */
+    height: 100%;
+    border-radius: 4px;
+    transition: width 0.5s ease-in-out; /* Animate the bar width */
+    text-align: right; /* For potential text inside bar */
+    color: white;
+    font-size: 0.7em;
+    line-height: 10px; /* Match container height */
+}
+
+
+/* Poll Action Buttons */
+.poll-actions {
+    margin-top: 15px;
+    border-top: 1px solid #eee;
+    padding-top: 10px;
+}
+
+.poll-actions button {
+     margin-right: 10px; /* Space between buttons */
+     margin-top: 0; /* Reset top margin if needed */
+}
+
+.view-results-button {
+    background-color: #5bc0de; /* Info blue */
+}
+.view-results-button:hover {
+    background-color: #31b0d5;
+}
+
+/* Ensure vote button styles are still applied if needed */
+.vote-button {
+     background-color: #337ab7;
+}
+.vote-button:hover {
+     background-color: #286090;
+}
