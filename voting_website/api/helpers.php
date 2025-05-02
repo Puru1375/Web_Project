@@ -42,7 +42,6 @@ function verifyCSRFToken($submittedToken) {
 // --- End CSRF Token Handling ---
 
 
-
 // --- IMPORTANT ---
 // This is a SIMULATED OTP function for demonstration.
 // Real OTP requires SMS/Email gateway integration (e.g., Twilio, SendGrid).

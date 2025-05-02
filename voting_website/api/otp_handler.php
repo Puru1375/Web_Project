@@ -1,6 +1,8 @@
 <?php
 // api/otp_handler.php
 require 'db_connect.php';
+require 'helpers.php';
+
 
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') { // Only verify for POST requests usually
@@ -17,7 +19,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') { // Only verify for POST requests us
 
 
 // If verification passed, continue with the rest of the script...
-checkLogin(); // Ensure user is logged in (if required for this action)
+ // Ensure user is logged in (if required for this action)
 
 
 

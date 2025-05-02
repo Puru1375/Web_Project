@@ -17,7 +17,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') { // Only verify for POST requests us
 }
 // --- End CSRF Verification ---
 
-checkLogin(); // Ensure user is logged in (if required for this action)
+ // Ensure user is logged in (if required for this action)
 
 
 
