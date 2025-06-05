@@ -18,11 +18,11 @@ try {
                 p.closes_at, -- Fetch the closing time
                 u.username AS created_by,
                 p.created_at,
-                GROUP_CONCAT(po.id ORDER BY po.id SEPARATOR '||') AS option_ids,
-                GROUP_CONCAT(po.option_text ORDER BY po.id SEPARATOR '||') AS option_texts,
+                GROUP_CONCAT(po.id, '||') AS option_ids,
+                GROUP_CONCAT(po.option_text, '||') AS option_texts,
                 (SELECT COUNT(*) FROM votes v WHERE v.poll_id = p.id AND v.user_id = ?) > 0 AS has_voted,
                 -- Determine if poll is open (NULL closes_at OR closes_at > NOW())
-                (p.closes_at IS NULL OR p.closes_at > NOW()) AS is_open
+                (p.closes_at IS NULL OR p.closes_at > datetime('now', 'localtime')) AS is_open
             FROM polls p
             JOIN users u ON p.created_by_user_id = u.id
             LEFT JOIN poll_options po ON p.id = po.poll_id
@@ -35,15 +35,30 @@ try {
 
     $polls = [];
     foreach ($pollsData as $poll) {
+        // *** ADD DETAILED LOGGING FOR EACH POLL ***
+        error_log("Poll ID: " . $poll['poll_id'] .
+                  ", closes_at from DB: " . $poll['closes_at'] .
+                  ", calculated is_open: " . ($poll['is_open'] ? 'true' : 'false'));
+        // *** END DETAILED LOGGING ***
         $options = [];
-        if ($poll['option_ids']) {
+        if ($poll['option_ids']) { // Check if option_ids is not null or empty
             $ids = explode('||', $poll['option_ids']);
             $texts = explode('||', $poll['option_texts']);
-            for ($i = 0; $i < count($ids); $i++) {
-                $options[] = [
-                    'id' => $ids[$i],
-                    'text' => $texts[$i]
-                ];
+            // Ensure counts match to prevent errors if one GROUP_CONCAT returns NULL
+            if (count($ids) == count($texts)) {
+                 for ($i = 0; $i < count($ids); $i++) {
+                    // Check if $ids[$i] and $texts[$i] are not empty,
+                    // as GROUP_CONCAT might return a single empty string
+                    // if there are no matching options for a poll in a LEFT JOIN scenario.
+                    if (!empty($ids[$i])) { // Basic check, you might need more robust
+                         $options[] = [
+                            'id' => $ids[$i],
+                            'text' => $texts[$i]
+                        ];
+                    }
+                }
+            } else {
+                error_log("Warning: Mismatch between option_ids and option_texts for poll_id: " . $poll['poll_id']);
             }
         }
         $polls[] = [

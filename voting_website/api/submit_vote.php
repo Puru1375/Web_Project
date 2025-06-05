@@ -27,21 +27,30 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $pollId = $_POST['poll_id'] ?? null;
     $optionId = $_POST['option_id'] ?? null;
 
-    if (empty($pollId) || empty($optionId)) {
+    if (!$pollId || !$optionId) {
         $response['message'] = 'Poll ID and Option ID are required.';
-    } else {
+        $httpStatusCode = 400;
+        // --- Set header and echo JSON before exit ---
+        header('Content-Type: application/json');
+        http_response_code($httpStatusCode);
+        echo json_encode($response);
+        exit;
+    }
         try {
 
              // --- Check if Poll is Open before proceeding ---
-            $sqlCheckOpen = "SELECT (closes_at IS NULL OR closes_at > NOW()) AS is_open FROM polls WHERE id = ?";
+            // Inside the try block in api/submit_vote.php
+            $sqlCheckOpen = "SELECT (closes_at IS NULL OR closes_at > datetime('now')) AS is_open FROM polls WHERE id = ?";
             $stmtCheckOpen = $pdo->prepare($sqlCheckOpen);
             $stmtCheckOpen->execute([$pollId]);
             $pollStatus = $stmtCheckOpen->fetch();
     
             if (!$pollStatus) {
                  $response['message'] = 'Poll not found.';
+                 $httpStatusCode = 404;
             } elseif (!$pollStatus['is_open']) {
                  $response['message'] = 'Sorry, this poll is now closed for voting.';
+                 $httpStatusCode = 403;
             } else {
              // --- Poll is open, proceed with voting logic ---
 
@@ -72,24 +81,35 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 if ($stmtInsert->execute([$userId, $pollId, $optionId])) {
                     $response['success'] = true;
                     $response['message'] = 'Vote submitted successfully!';
+                    $httpStatusCode = 201; 
                 } else {
                     $response['message'] = 'Failed to submit vote. Please try again.';
+                    $httpStatusCode = 500; // Internal Server Error
                 }
             }
             }
         } catch (PDOException $e) {
              // Check for unique constraint violation (alternative way to check if already voted)
-             if ($e->getCode() == 23000) { // Integrity constraint violation
-                 $response['message'] = 'You have already voted on this poll (constraint).';
-             } else {
+             if ($e->getCode() == 23000 || (strpos($e->getMessage(), 'UNIQUE constraint failed') !== false && strpos($e->getMessage(), 'votes.user_id, votes.poll_id') !== false)) {
+             // SQLite error code for UNIQUE constraint is often 19, but the message is more reliable.
+             // MySQL error code is 23000
+             $response['message'] = 'You have already voted on this poll.';
+             $httpStatusCode = 409; // Conflict
+         } else {
                 error_log("Submit Vote Error: " . $e->getMessage());
                 $response['message'] = 'An error occurred while submitting the vote.';
+                $httpStatusCode = 500; // Internal Server Error
              }
         }
-    }
+    
 } else {
     $response['message'] = 'Invalid request method.';
+    $httpStatusCode = 405; // Method Not Allowed
 }
 
+// --- Final JSON Output ---
+header('Content-Type: application/json');
+http_response_code($httpStatusCode);
 echo json_encode($response);
+exit;
 ?>

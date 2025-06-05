@@ -34,29 +34,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $response['message'] = 'Email and OTP are required.';
     } else {
         try {
-            $sql = "SELECT id, otp, otp_expiry FROM users WHERE email = ? AND is_verified = 0";
-            $stmt = $pdo->prepare($sql);
-            $stmt->execute([$email]);
-            $user = $stmt->fetch();
+            $sql = "SELECT id FROM users WHERE email = ? AND is_verified = 0 AND otp = ? AND otp_expiry > datetime('now')";
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute([$email, $otp]); // Pass $otp here
+    $user = $stmt->fetch();
 
-            if (!$user) {
-                $response['message'] = 'User not found or already verified.';
-            } elseif ($user['otp'] !== $otp) {
-                $response['message'] = 'Invalid OTP.';
-            } elseif (strtotime($user['otp_expiry']) < time()) {
-                $response['message'] = 'OTP has expired. Please register again to get a new OTP.';
-                // Optional: Add a resend OTP feature here in a real app
-            } else {
-                // OTP is correct and not expired, verify the user
-                $sqlUpdate = "UPDATE users SET is_verified = 1, otp = NULL, otp_expiry = NULL WHERE id = ?";
-                $stmtUpdate = $pdo->prepare($sqlUpdate);
-                if ($stmtUpdate->execute([$user['id']])) {
-                    $response['success'] = true;
-                    $response['message'] = 'Account verified successfully! You can now log in.';
-                } else {
-                    $response['message'] = 'Failed to verify account. Please try again.';
-                }
-            }
+    if (!$user) {
+        // This could be due to: user not found, already verified, wrong OTP, or OTP expired
+        $response['message'] = 'Invalid OTP or OTP has expired.';
+        // To differentiate, you could run separate queries, but this is simpler.
+    } else {
+        // OTP is correct, not expired, and user not verified. Verify them.
+        $sqlUpdate = "UPDATE users SET is_verified = 1, otp = NULL, otp_expiry = NULL WHERE id = ?";
+        $stmtUpdate = $pdo->prepare($sqlUpdate);
+        if ($stmtUpdate->execute([$user['id']])) {
+            $response['success'] = true;
+            $response['message'] = 'Account verified successfully! You can now log in.';
+            $httpStatusCode = 200;
+        } else {
+            $response['message'] = 'Failed to verify account. Please try again.';
+            $httpStatusCode = 500;
+        }
+    }
         } catch (PDOException $e) {
             error_log("OTP Verification Error: " . $e->getMessage());
             $response['message'] = 'An error occurred during verification.';

@@ -185,6 +185,7 @@ document.addEventListener('DOMContentLoaded', () => {
         try {
             // Fetch the polls list (includes 'has_voted' status)
             const response = await fetch('api/get_polls.php');
+            console.log("Raw fetch response object:", response); 
              if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
@@ -194,6 +195,7 @@ document.addEventListener('DOMContentLoaded', () => {
     
             if (data.success && data.polls.length > 0) {
                 data.polls.forEach(poll => {
+                    console.log(`Processing Poll ID: ${poll.id}, is_open from API: ${poll.is_open}, has_voted: ${poll.has_voted}`);
                     const pollElement = document.createElement('div');
                     pollElement.className = 'poll-item';
                     pollElement.dataset.pollId = poll.id; // Store poll ID
