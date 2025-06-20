@@ -1,12 +1,9 @@
 <?php
-// dashboard.php
-require 'api/db_connect.php'; // Establishes connection and starts session
-require 'api/helpers.php';    // Contains checkLogin()
-
-checkLogin(); // Make sure the user is logged in
-
+require 'api/db_connect.php';
+require 'api/helpers.php';
+checkLogin();
 $username = $_SESSION['username'];
-$csrf_token = generateCSRFToken(); // Generate/get token
+$csrf_token = generateCSRFToken();
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -15,32 +12,63 @@ $csrf_token = generateCSRFToken(); // Generate/get token
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard - Voting Website</title>
     <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
-<div class="spinner-overlay">
-        <div class="spinner"></div>
-    </div>
-    <header>
-        <h1>Voting Dashboard</h1>
-        <nav>
-            <span>Welcome, <?php echo htmlspecialchars($username); ?>!</span>
-            <a href="create_poll.php">Create New Poll</a>
-            <a href="api/logout.php">Logout</a>
-        </nav>
-    </header>
+    <div class="page-wrapper">
+        <header class="main-header">
+            <div class="nav-container">
+                <a href="index.php" class="logo">VoteSecure</a>
+                <nav class="main-nav">
+                    <ul>
+                        <li><a href="dashboard.php" class="nav-link active">Dashboard</a></li>
+                        <li><a href="create_poll.php" class="nav-link">Create Poll</a></li>
+                        <li><span>Welcome, <?php echo htmlspecialchars($username); ?>!</span></li>
+                        <li><a href="api/logout.php" class="nav-link">Logout</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </header>
 
-    <div class="container">
-        <h2>Available Polls</h2>
-        <div id="pollsList" data-csrf="<?php echo htmlspecialchars($csrf_token); ?>" >
-            <!-- Polls will be loaded here by JavaScript -->
-            <p>Loading polls...</p>
-        </div>
-         <div id="voteMessage" class="message" style="margin-top: 20px;"></div>
-    </div>
-    <footer>
-        Voting Website © <?php echo date("Y"); ?>
-    </footer>
+        <main>
+            <div class="dashboard-container container-narrow"> <!-- Use a more specific container -->
+                 <div class="dashboard-header">
+                    <h1>Available Polls</h1>
+                    <a href="create_poll.php" class="btn">Create New Poll</a>
+                </div>
+                <div id="pollsList" data-csrf="<?php echo htmlspecialchars($csrf_token); ?>">
+                    <p>Loading polls...</p>
+                </div>
+                <div id="voteMessage" class="message" style="margin-top: 20px;"></div>
+            </div>
+        </main>
 
+        <footer class="main-footer">
+            <div class="container-narrow footer-content">
+                <div class="footer-brand">
+                    <a href="index.php" class="logo">VotingSystem</a>
+                    <p>© <?php echo date("Y"); ?> VotingSystem. All rights reserved.</p>
+                </div>
+                <div class="footer-links">
+                    <div>
+                        <h4>Quick Links</h4>
+                        <ul>
+                            <li><a href="index.php">Login</a></li>
+                            <li><a href="register.php">Register</a></li>
+                            <li><a href="dashboard.php">Dashboard</a></li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4>Legal</h4>
+                        <ul>
+                            <li><a href="#">Privacy Policy</a></li>
+                            <li><a href="#">Terms of Service</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </div><!-- .page-wrapper -->
     <script src="js/script.js"></script>
 </body>
 </html>
