@@ -455,3 +455,29 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
 }); // End DOMContentLoaded
+
+// js/script.js
+
+document.addEventListener('DOMContentLoaded', () => {
+    // ... (all your existing code) ...
+
+    // --- Mobile Navigation Toggle ---
+    const navToggleButtons = document.querySelectorAll('.nav-toggle'); // Get all toggles
+
+    navToggleButtons.forEach(navToggle => {
+        // Find the associated menu, assuming it's the next .main-nav sibling or has a specific ID
+        // For this example, we gave the nav menu an ID: "mainNavMenu"
+        // This assumes only one mainNavMenu per page, or you'd need a more specific selector
+        const mainNavMenu = document.getElementById('mainNavMenu');
+
+        if (navToggle && mainNavMenu) {
+            navToggle.addEventListener('click', () => {
+                const isOpen = mainNavMenu.classList.contains('open');
+                navToggle.setAttribute('aria-expanded', !isOpen);
+                mainNavMenu.classList.toggle('open');
+                navToggle.classList.toggle('open'); // For hamburger animation
+            });
+        }
+    });
+
+}); // End DOMContentLoaded

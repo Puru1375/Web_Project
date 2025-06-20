@@ -16,15 +16,24 @@ $csrf_token = generateCSRFToken();
 </head>
 <body>
     <div class="page-wrapper">
-        <header class="main-header">
+        <header class="main-header app-header"> <!-- Added .app-header class for specific styling -->
             <div class="nav-container">
-                <a href="index.php" class="logo">VoteSecure</a>
-                <nav class="main-nav">
+                <a href="index.php" class="logo">VotingSystem</a>
+
+                <!-- Hamburger Icon (visible on mobile) -->
+                <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false">
+                    <span class="hamburger-line"></span>
+                    <span class="hamburger-line"></span>
+                    <span class="hamburger-line"></span>
+                    <!-- Or use Font Awesome: <i class="fas fa-bars"></i> -->
+                </button>
+
+                <nav class="main-nav" id="mainNavMenu"> <!-- Add ID for JS targeting -->
                     <ul>
                         <li><a href="dashboard.php" class="nav-link active">Dashboard</a></li>
                         <li><a href="create_poll.php" class="nav-link">Create Poll</a></li>
-                        <li><span>Welcome, <?php echo htmlspecialchars($username); ?>!</span></li>
-                        <li><a href="api/logout.php" class="nav-link">Logout</a></li>
+                        <li class="nav-user-info"><span>Welcome, <?php echo htmlspecialchars($username); ?>!</span></li>
+                        <li><a href="api/logout.php" class="nav-link logout-link">Logout</a></li>
                     </ul>
                 </nav>
             </div>
@@ -34,7 +43,6 @@ $csrf_token = generateCSRFToken();
             <div class="dashboard-container container-narrow"> <!-- Use a more specific container -->
                  <div class="dashboard-header">
                     <h1>Available Polls</h1>
-                    <a href="create_poll.php" class="btn">Create New Poll</a>
                 </div>
                 <div id="pollsList" data-csrf="<?php echo htmlspecialchars($csrf_token); ?>">
                     <p>Loading polls...</p>

@@ -11,6 +11,7 @@
     --accent-color: #FFC107;        /* Yellow Accent (Example) */
     --success-color: #28a745;       /* Green for success, results bar */
     --success-bg-light: #d1e7dd;
+    --secondary-color: #2a3db8;
     --success-text-dark: #0f5132;
     --danger-color: #dc3545;        /* Red for errors, remove button */
     --danger-hover-color: #c82333;
@@ -18,6 +19,9 @@
     --danger-text-dark: #842029;
     --info-color: #17a2b8;          /* Cyan for info buttons */
     --info-hover-color: #117a8b;
+     --text-color-dark: #212529; 
+    --text-color-base: #495057;       /* For labels */
+    --text-color-light: #6c757d;
     --text-color: #343a40;          /* Dark Gray for main text */
     --text-light: #6c757d;          /* Medium Gray for subtitles, meta */
     --text-on-dark: #adb5bd;        /* Light Gray for text on dark backgrounds */
@@ -26,10 +30,16 @@
     --background-white: #ffffff;    /* White for main content cards, forms */
     --border-color: #dee2e6;        /* Light Gray for borders */
     --border-radius-sm: 4px;
+    --background-card: #ffffff;
     --border-radius-md: 8px;
+    --box-shadow-card: 0 4px 20px rgba(0, 0, 0, 0.07);
+    --box-shadow-focus: 0 0 0 0.2rem rgba(var(--primary-color-rgb), 0.25);
     --box-shadow-light: 0 2px 8px rgba(0, 0, 0, 0.06);
     --box-shadow-md: 0 4px 15px rgba(0, 0, 0, 0.08);
     --font-family: 'Poppins', sans-serif;
+    --font-family-sans: 'Poppins', sans-serif; 
+    --button-secondary-bg: #6c757d; /* Grey for "Back" or secondary actions */
+    --button-secondary-hover-bg: #5a6268;
 }
 
 /* --- Basic Reset & Body --- */
@@ -202,7 +212,7 @@ img {
     font-weight: 700;
     margin-bottom: 1rem;
     color: var(--text-color);
-    line-height: 1.3;
+    line-height: 0.2;
 }
 .hero-content h1 .highlight {
     color: var(--primary-color);
@@ -309,7 +319,7 @@ img {
 
 /* --- General Content Sections (Features, How It Works on index.php) --- */
 .section-padding {
-    padding: 70px 20px;
+    padding: 10px 20px;
 }
 .alt-background { /* For alternating section backgrounds */
     background-color: var(--background-body); /* Use the body's light gray */
@@ -766,15 +776,310 @@ button.loading {
     .poll-actions button { width: 100%; margin-bottom: 10px; }
 }
 
-/* In style.css */
-
-/* Login Form Theming (within the Hero Section of index.php) */
 .login-form-container.auth-form-themed {
-    background-color: var(--background-white);
-    padding: 30px;
-    border-radius: var(--border-radius-md); /* Uses your defined --border-radius-md */
-    box-shadow: var(--box-shadow-md);      /* Uses your defined --box-shadow-md */
-    max-width: 450px;
-    margin: 40px auto 0; /* Top margin to separate from hero text, auto left/right for centering */
-    text-align: left; /* Align form elements left within this container */
+    background-color: var(--background-card);
+    padding: 1.5rem; /* Approx 40px, adjust for desired spacing */
+    border-radius: var(--border-radius-md); /* e.g., 8px */
+    box-shadow: var(--box-shadow-card);
+    max-width: 400px; /* Adjust to match visual */
+    margin: 40px auto 0; /* Centers it if parent is block/flex and has width */
+    text-align: left; /* Default text alignment for content inside */
 }
+
+/* "Member Login" Title */
+.login-form-container.auth-form-themed h2 {
+    text-align: center; /* Center the title */
+    font-size: 1.75rem; /* Approx 28px, adjust */
+    font-weight: 600;
+    color: var(--text-color-dark);
+    margin-bottom: 2rem; /* Approx 32px, space below title */
+}
+
+/* Each div.form-group wrapping label and input */
+.login-form-container.auth-form-themed .form-group {
+    margin-bottom: 1.25rem; /* Approx 20px */
+}
+
+/* Labels: "Username or Email", "Password" */
+.login-form-container.auth-form-themed .form-group label {
+    display: block; /* Make label take full width */
+    font-weight: 500;
+    color: var(--text-color-base);
+    margin-bottom: 0.5rem; /* Approx 8px, space below label */
+    font-size: 1rem; /* Approx 16px, adjust */
+}
+
+/* Input fields */
+.login-form-container.auth-form-themed .form-group input[type="text"],
+.login-form-container.auth-form-themed .form-group input[type="password"] {
+    width: 100%;
+    padding: 0.75rem 1rem; /* Approx 12px 16px */
+    font-size: 1rem; /* Input text size */
+    color: var(--text-color-base);
+    background-color: var(--background-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius-sm); /* e.g., 4px */
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+.login-form-container.auth-form-themed .form-group input::placeholder {
+    color: var(--text-color-light); /* Light grey for placeholder */
+    opacity: 1;
+}
+
+.login-form-container.auth-form-themed .form-group input:focus {
+    border-color: var(--primary-color);
+    outline: 0;
+    box-shadow: var(--box-shadow-focus);
+}
+
+/* Login Button */
+/* Assuming your button HTML is <button type="submit" class="btn btn-primary btn-block">Login</button> */
+.login-form-container.auth-form-themed .btn.btn-primary.btn-block {
+    display: block;
+    width: 100%; /* Make button full width */
+    background-color: var(--primary-color);
+    color: #ffffff; /* White text */
+    font-weight: 500; /* Or 600 for bolder */
+    text-align: center;
+    padding: 0.75rem 1rem; /* Approx 12px 16px */
+    font-size: 1rem;
+    border: none; /* Remove default border */
+    border-radius: var(--border-radius-sm);
+    transition: background-color 0.15s ease-in-out;
+    cursor: pointer;
+}
+
+.login-form-container.auth-form-themed .btn.btn-primary.btn-block:hover {
+    background-color: var(--secondary-color); /* Darker blue on hover */
+}
+
+/* Optional: Spinner inside button, if you have <span class="button-spinner"></span> */
+
+button.loading .button-spinner { display: inline-block; }
+button.loading { opacity: 0.7; cursor: progress; }
+
+
+/* Links below the button: "Forgot Password?", "Create an Account" */
+.login-form-container.auth-form-themed .form-links {
+    text-align: center; /* Center the links */
+    margin-top: 1.5rem; /* Approx 24px, space above links */
+    font-size: 0.9rem; /* Slightly smaller text */
+}
+
+.login-form-container.auth-form-themed .form-links a {
+    color: var(--primary-color); /* Blue link color */
+    font-weight: 500; /* Slightly bolder links */
+}
+
+.login-form-container.auth-form-themed .form-links span { /* The "|" separator */
+    margin: 0 0.5rem; /* Approx 8px spacing around separator */
+    color: var(--text-color-light); /* Light grey for separator */
+}
+
+/* Message area (for login success/error messages) */
+.login-form-container.auth-form-themed .message {
+    margin-top: 1rem; /* Space above message */
+    /* General .message styles (background, text color for .success/.error) apply */
+}
+
+/* css/style.css */
+/* ... (all your existing styles) ... */
+
+/* --- Mobile Navigation for App Header --- */
+.app-header .nav-toggle {
+    display: none; /* Hidden by default, shown on mobile */
+    background: none;
+    border: none;
+    padding: 0.5rem;
+    cursor: pointer;
+    z-index: 1001; /* Above the nav menu if it slides over */
+}
+
+.app-header .nav-toggle .hamburger-line {
+    display: block;
+    width: 25px;
+    height: 3px;
+    background-color: var(--text-color-dark); /* Or your primary color */
+    margin: 5px 0;
+    transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+/* Hamburger animation when 'open' class is added */
+.app-header .nav-toggle.open .hamburger-line:nth-child(1) {
+    transform: translateY(8px) rotate(45deg);
+}
+.app-header .nav-toggle.open .hamburger-line:nth-child(2) {
+    opacity: 0;
+}
+.app-header .nav-toggle.open .hamburger-line:nth-child(3) {
+    transform: translateY(-8px) rotate(-45deg);
+}
+
+
+@media (max-width: 768px) { /* Or your chosen breakpoint for mobile nav */
+    .app-header .main-nav {
+        /* Styling for the mobile menu panel */
+        position: absolute;
+        top: 100%; /* Position it right below the header */
+        left: 0;
+        width: 100%;
+        background-color: var(--background-white); /* Or a slightly darker shade */
+        box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        display: none; /* Hidden by default, shown by JS */
+        flex-direction: column;
+        align-items: stretch; /* Make items take full width */
+        padding: 1rem 0; /* Padding inside the mobile menu */
+        border-top: 1px solid var(--border-color);
+    }
+
+    .app-header .main-nav.open { /* Class added by JS to show menu */
+        display: flex;
+    }
+
+    .app-header .main-nav ul {
+        flex-direction: column; /* Stack nav items vertically */
+        width: 100%;
+        gap: 0; /* Remove gap, use padding on items */
+    }
+
+    .app-header .main-nav ul li {
+        width: 100%;
+        text-align: center; /* Center text or align left */
+    }
+
+    .app-header .main-nav .nav-link {
+        display: block; /* Make links full width for easier tapping */
+        padding: 0.8rem 1rem; /* Padding for tappable area */
+        border-bottom: 1px solid #f0f0f0; /* Separator lines */
+        width: 100%;
+    }
+    .app-header .main-nav .nav-link::after {
+        display: none; /* Hide underline effect on mobile dropdown */
+    }
+    .app-header .main-nav ul li:last-child .nav-link {
+        border-bottom: none; /* No border for the last item */
+    }
+    .app-header .main-nav .nav-user-info {
+        padding: 0.8rem 1rem;
+        color: var(--text-color-light);
+        font-size: 0.9rem;
+        border-bottom: 1px solid #f0f0f0;
+    }
+
+
+    .app-header .nav-toggle {
+        display: block; /* Show hamburger on mobile */
+    }
+
+    .app-header .nav-toggle.open .hamburger-line {
+        background-color: var(--text-color-dark); /* Ensure visibility */
+    }
+}
+
+/* css/style.css */
+/* ... (all your existing :root variables and other styles) ... */
+
+/* --- Auth Forms (Login, Register, OTP, Forgot/Reset Password) --- */
+/* This is the outer container for auth pages that are NOT the hero section */
+.auth-page-section {
+    padding: 60px 20px; /* Consistent padding */
+}
+
+.auth-form-container.auth-form-themed { /* Or just .auth-form-themed if you prefer */
+    background-color: var(--background-card);
+    padding: 2rem; /* 32px */
+    border-radius: var(--border-radius-md);
+    box-shadow: var(--box-shadow-card);
+    max-width: 480px; /* Consistent width */
+    margin: 0 auto; /* Center it within its parent section */
+    text-align: left;
+}
+
+.auth-form-themed h2 {
+    text-align: center;
+    font-size: 1.7rem;
+    font-weight: 600;
+    color: var(--text-color-dark);
+    margin-bottom: 1.5rem; /* Space below title */
+}
+
+/* New style for the subtext on OTP page */
+.auth-form-themed .auth-subtext {
+    text-align: center;
+    color: var(--text-color-base);
+    margin-bottom: 1.5rem; /* Space below this text */
+    font-size: 0.95rem;
+    line-height: 1.5;
+}
+.auth-form-themed .auth-subtext strong {
+    font-weight: 600; /* Make email bold */
+    color: var(--primary-color); /* Optional: color the email */
+}
+
+
+.auth-form-themed .form-group {
+    margin-bottom: 1.25rem;
+}
+.auth-form-themed .form-group label {
+    display: block;
+    font-weight: 500;
+    color: var(--text-color-base);
+    margin-bottom: 0.4rem;
+    font-size: 0.9rem;
+}
+.auth-form-themed .form-group input[type="text"],
+.auth-form-themed .form-group input[type="email"],
+.auth-form-themed .form-group input[type="password"] {
+    width: 100%;
+    padding: 0.7rem 0.9rem;
+    font-size: 1rem;
+    color: var(--text-color-base);
+    background-color: var(--background-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius-sm);
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+.auth-form-themed .form-group input::placeholder {
+    color: #adb5bd;
+    opacity: 1;
+}
+.auth-form-themed .form-group input:focus {
+    border-color: var(--primary-color);
+    outline: 0;
+    box-shadow: var(--box-shadow-focus);
+}
+.auth-form-themed .btn.btn-primary.btn-block { /* Make sure this is correctly targeted */
+    display: block;
+    width: 100%;
+    background-color: var(--primary-color);
+    color: var(--text-white);
+    font-weight: 500; /* Or 600 */
+    text-align: center;
+    padding: 0.75rem 1rem;
+    font-size: 1rem;
+    border: none;
+    border-radius: var(--border-radius-sm);
+    transition: background-color 0.15s ease-in-out;
+    cursor: pointer;
+}
+.auth-form-themed .btn.btn-primary.btn-block:hover {
+    background-color: var(--secondary-color);
+}
+
+.auth-form-themed .form-links {
+    text-align: center;
+    margin-top: 1.25rem;
+    font-size: 0.875rem;
+}
+.auth-form-themed .form-links a {
+    font-weight: 500;
+}
+
+.auth-form-themed .message {
+    margin-top: 1rem;
+    /* General .message styles apply here */
+}
+
+/* ... (rest of your style.css: navigation, hero, other sections, footer, responsive styles, etc.) ... */
+
