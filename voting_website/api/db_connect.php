@@ -27,10 +27,13 @@ if (!is_dir($db_file_path)) {
 define('SMTP_HOST', 'smtp.gmail.com');         // e.g., smtp.gmail.com or smtp.office365.com
 define('SMTP_PORT', 587);                       // 587 for TLS, 465 for SSL
 define('SMTP_USERNAME', 'purvanshu1375@gmail.com'); // Your SMTP login username
-define('SMTP_PASSWORD', 'hfpwudzybvhblncw'); // Your SMTP password or App Password
+define('SMTP_PASSWORD', 'hckfmwrnigmzobjp'); // Your SMTP password or App Password
 define('SMTP_ENCRYPTION', 'tls');               // 'tls' or 'ssl' (PHPMailer::ENCRYPTION_STARTTLS or PHPMailer::ENCRYPTION_SMTPS)
 define('SMTP_FROM_EMAIL', 'purvanshu1375@gmail.com'); // The "From" email address
 define('SMTP_FROM_NAME', 'Your Voting Website');    // The "From" name
+
+
+define('RECAPTCHA_V3_SECRET_KEY', '6LekrmkrAAAAAGDIcAXiskUY4GriR4ztauyDIEwZ');
 
 
 

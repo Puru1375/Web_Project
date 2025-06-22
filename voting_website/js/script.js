@@ -10,6 +10,45 @@ document.addEventListener('DOMContentLoaded', () => {
     const spinnerOverlay = document.querySelector('.spinner-overlay'); 
 
 
+
+    const RECAPTCHA_V3_SITE_KEY_JS = '6LekrmkrAAAAAPMmyB-TJaDMhfwcNfS1Rm6uaMRk'; // Add your Site Key here too for JS access
+
+    if (registerForm) {
+        registerForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const submitButton = registerForm.querySelector('button[type="submit"]');
+            showLoading(submitButton); // Show loading early
+
+            // Execute reCAPTCHA v3
+            grecaptcha.ready(function() {
+                grecaptcha.execute(RECAPTCHA_V3_SITE_KEY_JS, {action: 'register'}).then(async function(token) {
+                    // Add token to hidden input
+                    document.getElementById('recaptchaResponse').value = token;
+
+                    const formData = new FormData(registerForm); // Now includes recaptcha_response
+
+                    // Proceed with API call
+                    const response = await apiCall('api/register_handler.php', formData, submitButton);
+                    // hideLoading(submitButton); // apiCall's finally block will handle this
+
+                    showMessage(messageDiv, response.message, response.success);
+                    if (response.success && response.otp_sent) {
+                         window.location.href = `verify_otp.php?email=${encodeURIComponent(response.user_email)}`;
+                    }
+                }).catch(function(error) {
+                    console.error("reCAPTCHA execution error:", error);
+                    showMessage(messageDiv, "reCAPTCHA error. Please try again.", false);
+                    hideLoading(submitButton);
+                });
+            });
+        });
+    }
+
+
+
+
+
+
     function showLoading(button = null, showGlobal = false) {
         if (button) {
             button.disabled = true;
@@ -480,4 +519,4 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-}); // End DOMContentLoaded
+}); // End DOMContentLoaded          hckf mwrn igmz objp

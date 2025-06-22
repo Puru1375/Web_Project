@@ -18,7 +18,7 @@ $csrf_token = generateCSRFToken();
     <div class="page-wrapper">
         <header class="main-header app-header"> <!-- Added .app-header class for specific styling -->
             <div class="nav-container">
-                <a href="index.php" class="logo">VotingSystem</a>
+                <a href="index.php" class="logo">VoteSecure</a>
 
                 <!-- Hamburger Icon (visible on mobile) -->
                 <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false">
@@ -83,8 +83,8 @@ $csrf_token = generateCSRFToken();
         <footer class="main-footer">
             <div class="container-narrow footer-content">
                 <div class="footer-brand">
-                    <a href="index.php" class="logo">VotingSystem</a>
-                    <p>© <?php echo date("Y"); ?> VotingSystem. All rights reserved.</p>
+                    <a href="index.php" class="logo">VoteSecure</a>
+                    <p>© <?php echo date("Y"); ?> VoteSecure. All rights reserved.</p>
                 </div>
                 <div class="footer-links">
                     <div>

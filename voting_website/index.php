@@ -126,8 +126,8 @@ $csrf_token = generateCSRFToken();
         <footer class="main-footer">
             <div class="container-narrow footer-content">
                 <div class="footer-brand">
-                    <a href="index.php" class="logo">VotingSystem</a>
-                    <p>© <?php echo date("Y"); ?> VotingSystem. All rights reserved.</p>
+                    <a href="index.php" class="logo">VoteSecure</a>
+                    <p>© <?php echo date("Y"); ?> VoteSecure. All rights reserved.</p>
                 </div>
                 <div class="footer-links">
                     <div>

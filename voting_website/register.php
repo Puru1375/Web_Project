@@ -2,6 +2,8 @@
 require_once 'api/db_connect.php';
 require_once 'api/helpers.php';
 $csrf_token = generateCSRFToken();
+// Define your reCAPTCHA v3 Site Key (can also be done in JS, but PHP makes it easy to change)
+define('RECAPTCHA_V3_SITE_KEY', '6LekrmkrAAAAAPMmyB-TJaDMhfwcNfS1Rm6uaMRk');
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -11,6 +13,7 @@ $csrf_token = generateCSRFToken();
     <title>Register - Voting Website</title>
     <link rel="stylesheet" href="css/style.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://www.google.com/recaptcha/api.js?render=6LekrmkrAAAAAPMmyB-TJaDMhfwcNfS1Rm6uaMRk"></script>
 </head>
 <body>
     <div class="page-wrapper">
@@ -33,6 +36,7 @@ $csrf_token = generateCSRFToken();
                     <h2>Create Your Account</h2>
                     <form id="registerForm">
                         <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($csrf_token); ?>">
+                        <input type="hidden" name="recaptcha_response" id="recaptchaResponse">
                         <div class="form-group">
                             <label for="username">Username</label>
                             <input type="text" id="username" name="username" placeholder="Choose a username" required>
@@ -60,8 +64,8 @@ $csrf_token = generateCSRFToken();
         <footer class="main-footer">
             <div class="container-narrow footer-content">
                 <div class="footer-brand">
-                    <a href="index.php" class="logo">VotingSystem</a>
-                    <p>© <?php echo date("Y"); ?> VotingSystem. All rights reserved.</p>
+                    <a href="index.php" class="logo">VoteSecure</a>
+                    <p>© <?php echo date("Y"); ?> VoteSecure. All rights reserved.</p>
                 </div>
                 <div class="footer-links">
                     <div>

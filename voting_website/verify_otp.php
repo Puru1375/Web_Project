@@ -17,7 +17,7 @@ $emailForDisplay = htmlspecialchars($_GET['email'] ?? 'your email address'); // 
     <div class="page-wrapper">
         <header class="main-header"> <!-- Use the same header as other auth pages -->
             <div class="nav-container">
-                <a href="index.php" class="logo">VotingSystem</a>
+                <a href="index.php" class="logo">VoteSecure</a>
                 <nav class="main-nav">
                     <ul>
                         <li><a href="index.php" class="nav-link">Login</a></li>
@@ -53,8 +53,8 @@ $emailForDisplay = htmlspecialchars($_GET['email'] ?? 'your email address'); // 
         <footer class="main-footer">
              <div class="container-narrow footer-content">
                 <div class="footer-brand">
-                    <a href="index.php" class="logo">VotingSystem</a>
-                    <p>© <?php echo date("Y"); ?> VotingSystem. All rights reserved.</p>
+                    <a href="index.php" class="logo">VoteSecure</a>
+                    <p>© <?php echo date("Y"); ?> VoteSecure. All rights reserved.</p>
                 </div>
                 <div class="footer-links">
                     <div>
