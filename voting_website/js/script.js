@@ -13,36 +13,83 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const RECAPTCHA_V3_SITE_KEY_JS = '6LekrmkrAAAAAPMmyB-TJaDMhfwcNfS1Rm6uaMRk'; // Add your Site Key here too for JS access
 
-    if (registerForm) {
-        registerForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const submitButton = registerForm.querySelector('button[type="submit"]');
-            showLoading(submitButton); // Show loading early
+    // js/script.js - inside registerForm listener
+// js/script.js
+if (registerForm) {
+    registerForm.addEventListener('submit', function(e) { // Changed to non-async to manage flow explicitly
+        e.preventDefault();
+        const submitButton = registerForm.querySelector('button[type="submit"]');
+        const recaptchaResponseInput = document.getElementById('recaptchaResponse');
 
-            // Execute reCAPTCHA v3
-            grecaptcha.ready(function() {
-                grecaptcha.execute(RECAPTCHA_V3_SITE_KEY_JS, {action: 'register'}).then(async function(token) {
-                    // Add token to hidden input
-                    document.getElementById('recaptchaResponse').value = token;
+        showLoading(submitButton); // Disable button, show spinner
 
-                    const formData = new FormData(registerForm); // Now includes recaptcha_response
+        if (typeof grecaptcha === 'undefined' || typeof grecaptcha.ready === 'undefined') {
+            console.error("grecaptcha object not available.");
+            showMessage(messageDiv, "reCAPTCHA not loaded. Please refresh.", false);
+            hideLoading(submitButton);
+            return;
+        }
 
-                    // Proceed with API call
-                    const response = await apiCall('api/register_handler.php', formData, submitButton);
-                    // hideLoading(submitButton); // apiCall's finally block will handle this
+        grecaptcha.ready(function() {
+            grecaptcha.execute(RECAPTCHA_V3_SITE_KEY_JS, { action: 'register' }).then(function(token) {
+                console.log("reCAPTCHA token from Google:", token);
+                recaptchaResponseInput.value = token; // Set the token
+                console.log("Value of hidden input 'recaptchaResponse':", recaptchaResponseInput.value);
 
-                    showMessage(messageDiv, response.message, response.success);
-                    if (response.success && response.otp_sent) {
-                         window.location.href = `verify_otp.php?email=${encodeURIComponent(response.user_email)}`;
+                // NOW that the token is set in the hidden input, create FormData and make the call
+                const formData = new FormData(registerForm);
+
+                console.log("--- FormData being sent ---");
+                for (var pair of formData.entries()) {
+                    console.log(pair[0] + ': ' + pair[1]);
+                }
+                console.log("-------------------------");
+
+                // Use a separate async function for the API call
+                async function submitRegistration() {
+                    try {
+                        // Using direct fetch for clarity in this specific debug case
+                        const fetchResponse = await fetch('api/register_handler.php', {
+                            method: 'POST',
+                            body: formData
+                        });
+
+                        const responseText = await fetchResponse.text();
+                        console.log("Server Raw Response Text:", responseText);
+
+                        let data;
+                        try {
+                            data = JSON.parse(responseText);
+                        } catch (jsonError) {
+                            console.error("Failed to parse server response as JSON:", jsonError, responseText);
+                            showMessage(messageDiv, "Server returned an invalid response. Please check console.", false);
+                            return; // Exit this async function
+                        }
+
+                        console.log("Parsed Data:", data);
+                        showMessage(messageDiv, data.message, data.success);
+
+                        if (data.success && data.otp_sent) {
+                            window.location.href = `verify_otp.php?email=${encodeURIComponent(data.user_email)}`;
+                        }
+                    } catch (error) {
+                        console.error("API Call/Network Error:", error);
+                        showMessage(messageDiv, `Network or server error: ${error.message}`, false);
+                    } finally {
+                        hideLoading(submitButton); // Ensure button is re-enabled
                     }
-                }).catch(function(error) {
-                    console.error("reCAPTCHA execution error:", error);
-                    showMessage(messageDiv, "reCAPTCHA error. Please try again.", false);
-                    hideLoading(submitButton);
-                });
+                }
+
+                submitRegistration(); // Call the async function
+
+            }).catch(function(error) {
+                console.error("reCAPTCHA execution error:", error);
+                showMessage(messageDiv, "reCAPTCHA error. Please try again.", false);
+                hideLoading(submitButton);
             });
         });
-    }
+    });
+}
 
 
 
@@ -124,19 +171,19 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // --- Registration Form ---
-    if (registerForm) {
-        registerForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const submitButton = registerForm.querySelector('button[type="submit"]');
-            const formData = new FormData(registerForm);
-            // Pass button to apiCall
-            const response = await apiCall('api/register_handler.php', formData, submitButton);
-            showMessage(messageDiv, response.message, response.success);
-            if (response.success && response.otp_sent) {
-                 window.location.href = `verify_otp.php?email=${encodeURIComponent(response.user_email)}`;
-            }
-        });
-    }
+    // if (registerForm) {
+    //     registerForm.addEventListener('submit', async (e) => {
+    //         e.preventDefault();
+    //         const submitButton = registerForm.querySelector('button[type="submit"]');
+    //         const formData = new FormData(registerForm);
+    //         // Pass button to apiCall
+    //         const response = await apiCall('api/register_handler.php', formData, submitButton);
+    //         showMessage(messageDiv, response.message, response.success);
+    //         if (response.success && response.otp_sent) {
+    //              window.location.href = `verify_otp.php?email=${encodeURIComponent(response.user_email)}`;
+    //         }
+    //     });
+    // }
 
     // --- OTP Verification Form ---
     if (otpForm) {

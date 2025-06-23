@@ -1083,3 +1083,46 @@ button.loading { opacity: 0.7; cursor: progress; }
 
 /* ... (rest of your style.css: navigation, hero, other sections, footer, responsive styles, etc.) ... */
 
+
+/* In style.css */
+.feature-icon-placeholder {
+    font-size: 2.5rem; /* Make emoji larger */
+    color: var(--primary-color);
+    margin-bottom: 1rem;
+    width: 70px; /* Adjust size */
+    height: 70px;
+    background-color: rgba(var(--primary-color-rgb), 0.1); /* Lighter background */
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-left: auto;
+    margin-right: auto;
+    /* font-weight: normal; Remove if not needed for text icons */
+}
+/* In style.css */
+.btn.btn-lg {
+    padding: 0.875rem 2rem; /* 14px 32px - Larger padding */
+    font-size: 1.1rem;   /* Larger font */
+    font-weight: 600;
+}
+.cta-section {
+    background-color: var(--primary-color); /* Use primary color as background */
+    color: var(--text-white); /* White text on primary background */
+}
+.cta-section .section-title,
+.cta-section .subtitle {
+    color: var(--text-white); /* Ensure titles and subtitles are white */
+}
+.cta-section .section-title::after {
+    background-color: var(--text-white); /* White underline for title */
+}
+.cta-section .btn-primary { /* Make CTA button stand out, e.g., white or accent */
+    background-color: var(--background-white);
+    color: var(--primary-color);
+    border: 2px solid var(--background-white); /* Optional border */
+}
+.cta-section .btn-primary:hover {
+    background-color: #f0f0f0; /* Slightly off-white hover */
+    color: var(--secondary-color);
+}

@@ -1,20 +1,26 @@
 <?php
+error_log("--- RAW POST DATA in register_handler.php ---");
+error_log(print_r($_POST, true));
+error_log("--- END RAW POST DATA ---");
 // api/register_handler.php
 require 'db_connect.php';
 require 'helpers.php';
 
 // Initialize response array and HTTP status code at the very top
-header('Content-Type: application/json'); // Set this early
+//header('Content-Type: application/json'); // Set this early
 $response = ['success' => false, 'message' => 'An unexpected error occurred.'];
 $httpStatusCode = 500; // Default
 
 // Define $ip_address early as it's needed for logging in most cases
 $ip_address = $_SERVER['REMOTE_ADDR'] ?? 'UNKNOWN'; // Default if not available
 
+error_log("REGISTER HANDLER: Script started for IP: " . $ip_address); 
+
 // --- CSRF Token Verification ---
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $submittedToken = $_POST['csrf_token'] ?? '';
     if (!verifyCSRFToken($submittedToken)) {
+        error_log("REGISTER HANDLER: CSRF token verification FAILED for IP: " . $ip_address);
         $response['message'] = 'Invalid security token.';
         $httpStatusCode = 403;
         http_response_code($httpStatusCode);
@@ -23,6 +29,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         logRegistrationAttempt($pdo, $ip_address, 0); // 0 for unsuccessful
         exit;
     }
+    error_log("REGISTER HANDLER: CSRF token verification PASSED for IP: " . $ip_address); // <<< DEBUG
 } else {
     $response['message'] = 'Invalid request method.';
     $httpStatusCode = 405;
@@ -38,17 +45,36 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 // --- reCAPTCHA v3 Verification ---
 $recaptcha_secret = RECAPTCHA_V3_SECRET_KEY;
 $recaptcha_response_token = $_POST['recaptcha_response'] ?? '';
+error_log("REGISTER HANDLER: Token PHP is about to send to Google: " . $recaptcha_response_token); // <<< ADD THIS LINE
 $recaptchaPassed = false; // Flag for reCAPTCHA status
 
+error_log("REGISTER HANDLER: Starting reCAPTCHA verification for IP: " . $ip_address); // <<< DEBUG
+error_log("REGISTER HANDLER: reCAPTCHA token received: " . $recaptcha_response_token); // <<< DEBUG
+
 if (empty($recaptcha_response_token)) {
+    error_log("REGISTER HANDLER: reCAPTCHA token was EMPTY for IP: " . $ip_address); // <<< DEBUG
     $response['message'] = 'reCAPTCHA verification failed. (Token missing)';
     $httpStatusCode = 400;
 } else {
+    error_log("REGISTER HANDLER: Preparing to call Google siteverify for IP: " . $ip_address); // <<< DEBUG
     // ... (your file_get_contents and json_decode logic for reCAPTCHA) ...
     $verification_url = 'https://www.google.com/recaptcha/api/siteverify';
-    $post_data = http_build_query([ /* ... */ ]);
-    $context  = stream_context_create([ /* ... */ ]);
+    $post_data_array = [
+        'secret'   => $recaptcha_secret,             // Your secret key
+        'response' => $recaptcha_response_token,     // The token from the user's browser
+        'remoteip' => $_SERVER['REMOTE_ADDR'] ?? null // Optional: User's IP address
+    ];
+    $post_data = http_build_query($post_data_array);
+    $options = [
+        'http' => [
+            'method'  => 'POST',
+            'header'  => 'Content-type: application/x-www-form-urlencoded',
+            'content' => $post_data
+        ]
+    ];
+    $context  = stream_context_create($options);
     $verify_result_json = @file_get_contents($verification_url, false, $context); // Use @ to suppress warnings on failure
+    error_log("REGISTER HANDLER: Google siteverify raw response: " . $verify_result_json . " for IP: " . $ip_address); // <<< DEBUG
     $verify_result = $verify_result_json ? json_decode($verify_result_json, true) : null;
 
 
@@ -71,6 +97,7 @@ if (empty($recaptcha_response_token)) {
 }
 
 if (!$recaptchaPassed) { // If reCAPTCHA did not pass, send response and exit
+    error_log("REGISTER HANDLER: reCAPTCHA did not pass, exiting for IP: " . $ip_address); // <<< DEBUG
     http_response_code($httpStatusCode);
     echo json_encode($response);
     logRegistrationAttempt($pdo, $ip_address, 0); // Log failed attempt
